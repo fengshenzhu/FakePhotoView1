@@ -1,5 +1,6 @@
 package com.github.sethfeng.fakephotoview.demo
 
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -15,20 +16,21 @@ class MainActivity : AppCompatActivity() {
 
         Handler().postDelayed({
 
-//        fakePhotoView.apply {
-//            setFakeScaleType(ScaleType.CENTER)
-//            setFakeDrawable(FakeDrawable())
-//        }
-
-        fakeTextureView.apply {
-            setFakeScaleType(ScaleType.CENTER)
-            setFakeDrawable(FakeDrawable())
-        }
 
 //            fakeView.apply {
 //                setFakeScaleType(ScaleType.CENTER)
 //                setFakeDrawable(FakeDrawable())
 //            }
+
+//        fakeTextureView.apply {
+//            setFakeScaleType(ScaleType.CENTER)
+//            setFakeDrawable(FakeDrawable())
+//        }
+
+        fakeImageView.apply {
+            setFakeScaleType(ScaleType.CENTER)
+            setFakeDrawable(resources.getDrawable(R.drawable.wallpaper))
+        }
 
         }, 3_000)
     }
