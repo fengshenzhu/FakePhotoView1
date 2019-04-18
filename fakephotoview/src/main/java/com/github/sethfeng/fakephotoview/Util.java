@@ -1,10 +1,11 @@
 package com.github.sethfeng.fakephotoview;
 
+import android.graphics.Matrix;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import com.github.sethfeng.fakephotoview.fake.Fakeable;
 
-class Util {
+public class Util {
 
     static void checkZoomLevels(float minZoom, float midZoom,
                                 float maxZoom) {
@@ -34,5 +35,20 @@ class Util {
 
     static int getPointerIndex(int action) {
         return (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+    }
+
+    public static boolean matrixChanged(Matrix matrix1, Matrix matrix2) {
+        if (matrix1 == null && matrix2 == null) return false;
+        if (matrix1 == null || matrix2 == null) return true;
+        float value1[] = new float[9];
+        float value2[] = new float[9];
+        matrix1.getValues(value1);
+        matrix2.getValues(value2);
+        for (int i = 0; i < 9; i++) {
+            if (Math.abs(value1[i] - value2[i]) > 0.1) {
+                return true;
+            }
+        }
+        return false;
     }
 }

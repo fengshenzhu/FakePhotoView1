@@ -2,11 +2,19 @@ package com.example.atemktx.photoview
 
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.util.Log
 
 /**
  * Created by fengshzh on 04/18/2019.
  */
-class FakeDrawable: Drawable() {
+class FakeDrawable : Drawable() {
+
+    companion object {
+        private const val TAG = "FakeDrawable"
+    }
+
+    val NUM = 100
+    val NUM2 = 500
 
     val paint = Paint().apply {
         color = Color.GREEN
@@ -14,7 +22,7 @@ class FakeDrawable: Drawable() {
     }
 
     override fun getIntrinsicWidth(): Int {
-        return 10000
+        return 1440 * NUM
     }
 
     override fun getIntrinsicHeight(): Int {
@@ -22,9 +30,16 @@ class FakeDrawable: Drawable() {
     }
 
     override fun draw(canvas: Canvas) {
+        val timeStart = System.currentTimeMillis()
         canvas.drawColor(Color.GRAY)
-        canvas.drawText("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
-                0f,400f, paint)
+        for (i in 0 until NUM2) {
+            canvas.drawText(
+                i.toString(),
+                1440f * i, 400f, paint
+            )
+        }
+//        Thread.sleep(17)
+        Log.d(TAG, "draw fps ${1000 / (System.currentTimeMillis() - timeStart)}")
     }
 
     override fun setAlpha(alpha: Int) {

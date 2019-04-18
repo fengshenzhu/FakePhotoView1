@@ -13,22 +13,34 @@ import android.widget.ImageView.ScaleType
 interface Fakeable {
     /** view start */
     fun getParentFake(): ViewParent
+
     fun getContextFake(): Context
+
     fun postFake(runnable: Runnable)
+
     fun setOnTouchListenerFake(listener: View.OnTouchListener)
+
     fun addOnLayoutChangeListenerFake(listener: View.OnLayoutChangeListener)
+
     fun isInEditModeFake(): Boolean
+
     fun getRightFake(): Int
+
     fun getBottomFake(): Int
+
     fun getWidthFake(): Int
+
     fun getPaddingLeftFake(): Int
+
     fun getPaddingRightFake(): Int
+
     fun getHeightFake(): Int
+
     fun getPaddingTopFake(): Int
+
     fun getPaddingBottomFake(): Int
+
     fun postOnAnimationFake(runnable: Runnable)
-
-
     /** view end */
 
 

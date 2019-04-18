@@ -7,13 +7,32 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <com.github.sethfeng.fakephotoview.PhotoView
-            android:id="@+id/fakePhotoView"
+    <!--<com.github.sethfeng.fakephotoview.PhotoView-->
+            <!--android:id="@+id/fakePhotoView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent"/>-->
+
+
+    <com.github.sethfeng.fakephotoview.demo.FakeTextureView
+            android:id="@+id/fakeTextureView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+    <!--<com.github.sethfeng.fakephotoview.demo.FakeView-->
+            <!--android:id="@+id/fakeView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

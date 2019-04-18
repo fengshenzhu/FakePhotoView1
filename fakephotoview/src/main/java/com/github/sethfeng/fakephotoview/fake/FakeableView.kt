@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewParent
 import android.widget.ImageView.ScaleType
 import com.github.sethfeng.fakephotoview.Compat
+import com.github.sethfeng.fakephotoview.Util
 import com.github.sethfeng.fakephotoview.fake.Fakeable
 import kotlin.math.abs
 
@@ -22,21 +23,6 @@ open class FakeableView @JvmOverloads constructor(
 
     companion object {
         private const val TAG = "FakeableView"
-
-        fun matrixChanged(matrix1: Matrix?, matrix2: Matrix?): Boolean {
-            if (matrix1 == null && matrix2 == null) return false
-            if (matrix1 == null || matrix2 == null) return true
-            val values1 = FloatArray(9)
-            matrix1.getValues(values1)
-            val values2 = FloatArray(9)
-            matrix2.getValues(values2)
-            for (i in 0 until 9) {
-                if (abs(values1[i] - values2[i]) > 0.1) {
-                    return true
-                }
-            }
-            return false
-        }
     }
 
     private var mDrawable: Drawable? = null
@@ -122,7 +108,7 @@ open class FakeableView @JvmOverloads constructor(
     }
 
     override fun setFakeMatrix(matrix: Matrix?) {
-        if (!matrixChanged(mMatrix, matrix)) return
+        if (!Util.matrixChanged(mMatrix, matrix)) return
         Log.d(TAG, "setFakeMatrix $matrix")
         mMatrix.set(matrix)
         configureBounds()
