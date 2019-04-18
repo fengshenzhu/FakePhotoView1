@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.GestureDetector
+import android.view.View
 import android.view.ViewParent
 import android.widget.ImageView
 import com.github.sethfeng.fakephotoview.*
@@ -20,16 +21,16 @@ import com.github.sethfeng.fakephotoview.fake.Fakeable
  */
 class FakeImageView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ImageView(context, attrs, defStyleAttr), Fakeable,
+) : View(context, attrs, defStyleAttr), Fakeable,
     Attachable {
 
     companion object {
-        private const val TAG = "FakeTextureView"
+        private const val TAG = "FakeImageView"
     }
 
     private var mDrawable: Drawable? = null
     private var mMatrix = Matrix()
-    private var mScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_START
+//    private var mScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_START
 
     private var attacher: PhotoViewAttacher = PhotoViewAttacher(this)
 
@@ -99,6 +100,7 @@ class FakeImageView @JvmOverloads constructor(
         updateDrawable()
         requestLayout()
         invalidate()
+        attacher.update()
     }
 
     override fun getFakeDrawable(): Drawable? {
@@ -107,12 +109,15 @@ class FakeImageView @JvmOverloads constructor(
     }
 
     override fun getFakeScaleType(): ImageView.ScaleType {
-        Log.d(TAG, "getFakeScaleType $mScaleType")
-        return mScaleType
+//        Log.d(TAG, "getFakeScaleType $mScaleType")
+        Log.d(TAG, "getFakeScaleType")
+        return attacher.scaleType
     }
 
     override fun setFakeMatrix(matrix: Matrix?) {
+        // overscroll not refresh ui
         if (!Util.matrixChanged(mMatrix, matrix)) return
+
         Log.d(TAG, "setFakeMatrix $matrix")
         mMatrix.set(matrix)
         configureBounds()
@@ -120,15 +125,16 @@ class FakeImageView @JvmOverloads constructor(
     }
 
     override fun getFakeMatrix(): Matrix? {
-        Log.d(TAG, "getFakeMatrix $mMatrix")
-        return mMatrix
+//        Log.d(TAG, "getFakeMatrix $mMatrix")
+        return attacher.imageMatrix
     }
 
     override fun setFakeScaleType(scaleType: ImageView.ScaleType) {
         Log.d(TAG, "setFakeScaleType $scaleType")
-        mScaleType = scaleType
-        requestLayout()
-        invalidate()
+//        mScaleType = scaleType
+//        requestLayout()
+//        invalidate()
+        attacher.scaleType = scaleType
     }
 
     private fun updateDrawable() {

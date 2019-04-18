@@ -28,10 +28,10 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         fakeImageView.apply {
-            setFakeScaleType(ScaleType.CENTER)
             setFakeDrawable(resources.getDrawable(R.drawable.wallpaper))
+            setFakeScaleType(ScaleType.CENTER_CROP)
         }
 
-        }, 3_000)
+        }, 1_000)
     }
 }
