@@ -27,9 +27,9 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
+import com.example.atemktx.photoview.FakeImageView;
 
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
@@ -63,7 +63,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private boolean mAllowParentInterceptOnEdge = true;
     private boolean mBlockParentIntercept = false;
 
-    private ImageView mImageView;
+    private FakeImageView mImageView;
 
     // Gesture Detectors
     private GestureDetector mGestureDetector;
@@ -108,7 +108,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             checkAndDisplayMatrix();
 
             /*
-             * Here we decide whether to let the ImageView's parent to start taking
+             * Here we decide whether to let the FakeImageView's parent to start taking
              * over the touch event.
              *
              * First we check whether this function is enabled. We never want the
@@ -154,7 +154,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
     };
 
-    public PhotoViewAttacher(ImageView imageView) {
+    public PhotoViewAttacher(FakeImageView imageView) {
         mImageView = imageView;
         imageView.setOnTouchListener(this);
         imageView.addOnLayoutChangeListener(this);
@@ -332,7 +332,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
-        if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
+        if (mZoomEnabled && Util.hasDrawable((FakeImageView) v)) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     ViewParent parent = v.getParent();
@@ -704,11 +704,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         return true;
     }
 
-    private int getImageViewWidth(ImageView imageView) {
+    private int getImageViewWidth(FakeImageView imageView) {
         return imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
     }
 
-    private int getImageViewHeight(ImageView imageView) {
+    private int getImageViewHeight(FakeImageView imageView) {
         return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
     }
 

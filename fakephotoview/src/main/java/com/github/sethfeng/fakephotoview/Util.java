@@ -2,6 +2,7 @@ package com.github.sethfeng.fakephotoview;
 
 import android.view.MotionEvent;
 import android.widget.ImageView;
+import com.example.atemktx.photoview.FakeImageView;
 
 class Util {
 
@@ -16,7 +17,7 @@ class Util {
         }
     }
 
-    static boolean hasDrawable(ImageView imageView) {
+    static boolean hasDrawable(FakeImageView imageView) {
         return imageView.getDrawable() != null;
     }
 

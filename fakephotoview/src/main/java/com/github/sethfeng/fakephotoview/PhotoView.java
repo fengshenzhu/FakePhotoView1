@@ -22,14 +22,15 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
-import androidx.appcompat.widget.AppCompatImageView;
+import android.widget.ImageView.ScaleType;
+import com.example.atemktx.photoview.FakeImageView;
 
 /**
  * A zoomable ImageView. See {@link PhotoViewAttacher} for most of the details on how the zooming
  * is accomplished
  */
 @SuppressWarnings("unused")
-public class PhotoView extends AppCompatImageView {
+public class PhotoView extends FakeImageView {
 
     private PhotoViewAttacher attacher;
     private ScaleType pendingScaleType;
@@ -124,14 +125,14 @@ public class PhotoView extends AppCompatImageView {
         }
     }
 
-    @Override
-    protected boolean setFrame(int l, int t, int r, int b) {
-        boolean changed = super.setFrame(l, t, r, b);
-        if (changed) {
-            attacher.update();
-        }
-        return changed;
-    }
+//    @Override
+//    protected boolean setFrame(int l, int t, int r, int b) {
+//        boolean changed = super.setFrame(l, t, r, b);
+//        if (changed) {
+//            attacher.update();
+//        }
+//        return changed;
+//    }
 
     public void setRotationTo(float rotationDegree) {
         attacher.setRotationTo(rotationDegree);
