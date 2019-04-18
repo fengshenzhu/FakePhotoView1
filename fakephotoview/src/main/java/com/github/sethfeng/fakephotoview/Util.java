@@ -2,7 +2,7 @@ package com.github.sethfeng.fakephotoview;
 
 import android.view.MotionEvent;
 import android.widget.ImageView;
-import com.example.atemktx.photoview.FakeImageView;
+import com.github.sethfeng.fakephotoview.fake.Fakeable;
 
 class Util {
 
@@ -17,8 +17,8 @@ class Util {
         }
     }
 
-    static boolean hasDrawable(FakeImageView imageView) {
-        return imageView.getDrawable() != null;
+    static boolean hasDrawable(Fakeable imageView) {
+        return imageView.getFakeDrawable() != null;
     }
 
     static boolean isSupportedScaleType(final ImageView.ScaleType scaleType) {

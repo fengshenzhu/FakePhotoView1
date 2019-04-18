@@ -12,8 +12,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         fakePhotoView.apply {
-            setScaleType(ScaleType.CENTER)
-            setImageDrawable(FakeDrawable())
+            setFakeScaleType(ScaleType.CENTER)
+            setFakeDrawable(FakeDrawable())
         }
     }
 }

@@ -19,18 +19,22 @@ import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.widget.ImageView.ScaleType;
-import com.example.atemktx.photoview.FakeImageView;
+import com.example.atemktx.photoview.FakeableView;
+import com.github.sethfeng.fakephotoview.fake.FakeOnClickListener;
+import com.github.sethfeng.fakephotoview.fake.FakeOnLongClickListener;
+import com.github.sethfeng.fakephotoview.fake.FakeOnViewTapListener;
+import com.github.sethfeng.fakephotoview.fake.Fakeable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A zoomable ImageView. See {@link PhotoViewAttacher} for most of the details on how the zooming
  * is accomplished
  */
 @SuppressWarnings("unused")
-public class PhotoView extends FakeImageView {
+public class PhotoView extends FakeableView {
 
     private PhotoViewAttacher attacher;
     private ScaleType pendingScaleType;
@@ -52,10 +56,10 @@ public class PhotoView extends FakeImageView {
         attacher = new PhotoViewAttacher(this);
         //We always pose as a Matrix scale type, though we can change to another scale type
         //via the attacher
-        super.setScaleType(ScaleType.MATRIX);
+        super.setFakeScaleType(ScaleType.MATRIX);
         //apply the previously applied scale type
         if (pendingScaleType != null) {
-            setScaleType(pendingScaleType);
+            setFakeScaleType(pendingScaleType);
             pendingScaleType = null;
         }
     }
@@ -72,27 +76,37 @@ public class PhotoView extends FakeImageView {
     }
 
     @Override
-    public ScaleType getScaleType() {
+    public ScaleType getFakeScaleType() {
         return attacher.getScaleType();
     }
 
     @Override
-    public Matrix getImageMatrix() {
+    public Matrix getFakeMatrix() {
         return attacher.getImageMatrix();
     }
 
     @Override
-    public void setOnLongClickListener(OnLongClickListener l) {
-        attacher.setOnLongClickListener(l);
+    public void setOnLongClickListener(final OnLongClickListener l) {
+        attacher.setOnLongClickListener(new FakeOnLongClickListener() {
+            @Override
+            public boolean onLongClick(@NotNull Fakeable fakeable) {
+                return l.onLongClick(PhotoView.this);
+            }
+        });
     }
 
     @Override
-    public void setOnClickListener(OnClickListener l) {
-        attacher.setOnClickListener(l);
+    public void setOnClickListener(final OnClickListener l) {
+        attacher.setOnClickListener(new FakeOnClickListener() {
+            @Override
+            public void onClick(@NotNull Fakeable fakeable) {
+                l.onClick(PhotoView.this);
+            }
+        });
     }
 
     @Override
-    public void setScaleType(ScaleType scaleType) {
+    public void setFakeScaleType(ScaleType scaleType) {
         if (attacher == null) {
             pendingScaleType = scaleType;
         } else {
@@ -101,29 +115,29 @@ public class PhotoView extends FakeImageView {
     }
 
     @Override
-    public void setImageDrawable(Drawable drawable) {
-        super.setImageDrawable(drawable);
+    public void setFakeDrawable(Drawable drawable) {
+        super.setFakeDrawable(drawable);
         // setImageBitmap calls through to this method
         if (attacher != null) {
             attacher.update();
         }
     }
-
-    @Override
-    public void setImageResource(int resId) {
-        super.setImageResource(resId);
-        if (attacher != null) {
-            attacher.update();
-        }
-    }
-
-    @Override
-    public void setImageURI(Uri uri) {
-        super.setImageURI(uri);
-        if (attacher != null) {
-            attacher.update();
-        }
-    }
+//
+//    @Override
+//    public void setImageResource(int resId) {
+//        super.setImageResource(resId);
+//        if (attacher != null) {
+//            attacher.update();
+//        }
+//    }
+//
+//    @Override
+//    public void setImageURI(Uri uri) {
+//        super.setImageURI(uri);
+//        if (attacher != null) {
+//            attacher.update();
+//        }
+//    }
 
 //    @Override
 //    protected boolean setFrame(int l, int t, int r, int b) {
@@ -218,8 +232,13 @@ public class PhotoView extends FakeImageView {
         attacher.setOnOutsidePhotoTapListener(listener);
     }
 
-    public void setOnViewTapListener(OnViewTapListener listener) {
-        attacher.setOnViewTapListener(listener);
+    public void setOnViewTapListener(final OnViewTapListener listener) {
+        attacher.setOnViewTapListener(new FakeOnViewTapListener() {
+            @Override
+            public void onViewTap(@NotNull Fakeable fakeable, float x, float y) {
+                listener.onViewTap(PhotoView.this, x, y);
+            }
+        });
     }
 
     public void setOnViewDragListener(OnViewDragListener listener) {
