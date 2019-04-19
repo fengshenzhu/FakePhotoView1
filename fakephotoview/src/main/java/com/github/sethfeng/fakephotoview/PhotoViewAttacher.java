@@ -95,6 +95,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mBaseRotation;
 
     private boolean mZoomEnabled = true;
+    private boolean mXZoomEnabled = true;
+    private boolean mYZoomEnabled = true;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
     private OnGestureListener onGestureListener = new OnGestureListener() {
@@ -150,7 +152,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 if (mScaleChangeListener != null) {
                     mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
                 }
-                mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
+                mSuppMatrix.postScale(mXZoomEnabled? scaleFactor : 1, mYZoomEnabled ? scaleFactor : 1, focusX, focusY);
                 checkAndDisplayMatrix();
             }
         }
@@ -265,6 +267,16 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     @Deprecated
     public boolean isZoomEnabled() {
         return mZoomEnabled;
+    }
+
+    @Deprecated
+    public boolean isXZoomEnabled() {
+        return mXZoomEnabled;
+    }
+
+    @Deprecated
+    public boolean isYZoomEnabled() {
+        return mYZoomEnabled;
     }
 
     public RectF getDisplayRect() {
@@ -461,7 +473,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mImageView.postFake(new AnimatedZoomRunnable(getScale(), scale,
                 focalX, focalY));
         } else {
-            mSuppMatrix.setScale(scale, scale, focalX, focalY);
+            mSuppMatrix.setScale(mXZoomEnabled ? scale : 1, mYZoomEnabled ? scale : 1, focalX, focalY);
             checkAndDisplayMatrix();
         }
     }
@@ -486,8 +498,26 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         return mZoomEnabled;
     }
 
+    public boolean isXZoomable() {
+        return mXZoomEnabled;
+    }
+
+    public boolean isYZoomable() {
+        return mYZoomEnabled;
+    }
+
     public void setZoomable(boolean zoomable) {
         mZoomEnabled = zoomable;
+        update();
+    }
+
+    public void setXZoomable(boolean zoomable) {
+        mXZoomEnabled = zoomable;
+        update();
+    }
+
+    public void setYZoomable(boolean zoomable) {
+        mYZoomEnabled = zoomable;
         update();
     }
 

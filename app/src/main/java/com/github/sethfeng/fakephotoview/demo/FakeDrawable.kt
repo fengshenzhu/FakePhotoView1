@@ -26,7 +26,7 @@ class FakeDrawable(var width: Int = 100, var height: Int = 100) : Drawable() {
     }
 
     private val drawablePaint = Paint().apply {
-        color = Color.parseColor("#3f0000ff")
+        color = Color.parseColor("#3f00ff00")
     }
 
     override fun getIntrinsicWidth(): Int {

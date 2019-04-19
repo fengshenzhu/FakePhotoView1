@@ -39,7 +39,9 @@ class MainActivity : AppCompatActivity() {
 
             fakeView.apply {
                 setFakeScaleType(scaleType)
-                setFakeDrawable(FakeDrawable((ScreenUtil.SCREEN_WIDTH * num).toInt(), height))
+                setFakeDrawable(FakeDrawable((ScreenUtil.SCREEN_WIDTH * num).toInt(), height - 48))
+                // disable height zoom
+                setYZoomable(false)
                 // init position: end
                 getDisplayMatrix(endMatrix)
                 endMatrix.setTranslate(
@@ -58,7 +60,9 @@ class MainActivity : AppCompatActivity() {
 
             fakeTextureView.apply {
                 setFakeScaleType(scaleType)
-                setFakeDrawable(FakeDrawable((ScreenUtil.SCREEN_WIDTH * num).toInt(), height))
+                setFakeDrawable(FakeDrawable((ScreenUtil.SCREEN_WIDTH * num).toInt(), height - 48))
+                // FIXME: disable width zoom failed!!!
+//                setXZoomable(false)
             }
 
         }, 1_000)

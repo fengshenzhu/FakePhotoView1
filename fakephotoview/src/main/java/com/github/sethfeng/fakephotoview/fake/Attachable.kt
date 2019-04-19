@@ -16,7 +16,15 @@ interface Attachable {
 
     fun isZoomable(): Boolean
 
+    fun isXZoomable(): Boolean
+
+    fun isYZoomable(): Boolean
+
     fun setZoomable(zoomable: Boolean)
+
+    fun setXZoomable(zoomable: Boolean)
+
+    fun setYZoomable(zoomable: Boolean)
 
     fun getDisplayRect(): RectF
 

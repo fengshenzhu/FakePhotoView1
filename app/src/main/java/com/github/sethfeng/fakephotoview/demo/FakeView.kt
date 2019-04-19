@@ -33,7 +33,7 @@ class FakeView @JvmOverloads constructor(
     private var mDrawable: Drawable? = null
     private var mMatrix = Matrix()
 
-    var attacher: PhotoViewAttacher = PhotoViewAttacher(this)
+    private var attacher: PhotoViewAttacher = PhotoViewAttacher(this)
 
     override fun getParentFake(): ViewParent {
         return parent
@@ -155,8 +155,24 @@ class FakeView @JvmOverloads constructor(
         return attacher.isZoomable()
     }
 
+    override fun isXZoomable(): Boolean {
+        return attacher.isXZoomable()
+    }
+
+    override fun isYZoomable(): Boolean {
+        return attacher.isZoomable()
+    }
+
     override fun setZoomable(zoomable: Boolean) {
         attacher.setZoomable(zoomable)
+    }
+
+    override fun setXZoomable(zoomable: Boolean) {
+        attacher.setXZoomable(zoomable)
+    }
+
+    override fun setYZoomable(zoomable: Boolean) {
+        attacher.setYZoomable(zoomable)
     }
 
     override fun getDisplayRect(): RectF {
