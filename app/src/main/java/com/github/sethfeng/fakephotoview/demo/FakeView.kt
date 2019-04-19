@@ -27,14 +27,13 @@ class FakeView @JvmOverloads constructor(
     Attachable {
 
     companion object {
-        private const val TAG = "FakeTextureView"
+        private const val TAG = "FakeView"
     }
 
     private var mDrawable: Drawable? = null
     private var mMatrix = Matrix()
-    private var mScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_START
 
-    private var attacher: PhotoViewAttacher = PhotoViewAttacher(this)
+    var attacher: PhotoViewAttacher = PhotoViewAttacher(this)
 
     override fun getParentFake(): ViewParent {
         return parent
@@ -101,7 +100,7 @@ class FakeView @JvmOverloads constructor(
         mDrawable = drawable
         updateDrawable()
         requestLayout()
-        invalidate()
+        attacher.update()
     }
 
     override fun getFakeDrawable(): Drawable? {
@@ -110,28 +109,28 @@ class FakeView @JvmOverloads constructor(
     }
 
     override fun getFakeScaleType(): ImageView.ScaleType {
-        Log.d(TAG, "getFakeScaleType $mScaleType")
-        return mScaleType
+//        Log.d(TAG, "getFakeScaleType $mScaleType")
+        Log.d(TAG, "getFakeScaleType")
+        return attacher.scaleType
     }
 
     override fun setFakeMatrix(matrix: Matrix?) {
-        if (!Util.matrixChanged(mMatrix, matrix)) return
-        Log.d(TAG, "setFakeMatrix $matrix")
+        // TODO overscroll not refresh ui
+//        if (!Util.matrixChanged(mMatrix, matrix)) return
         mMatrix.set(matrix)
+        Log.d(TAG, "setFakeMatrix $mMatrix")
         configureBounds()
         invalidate()
     }
 
     override fun getFakeMatrix(): Matrix? {
-        Log.d(TAG, "getFakeMatrix $mMatrix")
-        return mMatrix
+//        Log.d(TAG, "getFakeMatrix $mMatrix")
+        return attacher.imageMatrix
     }
 
     override fun setFakeScaleType(scaleType: ImageView.ScaleType) {
         Log.d(TAG, "setFakeScaleType $scaleType")
-        mScaleType = scaleType
-        requestLayout()
-        invalidate()
+        attacher.scaleType = scaleType
     }
 
     private fun updateDrawable() {
@@ -269,6 +268,7 @@ class FakeView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas?) {
+        Log.d(TAG, "canvas: ${canvas!!.width}, ${canvas.height}")
         if (mDrawable == null) {
             return  // couldn't resolve the URI
         }

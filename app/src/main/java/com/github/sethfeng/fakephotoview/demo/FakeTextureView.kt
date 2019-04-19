@@ -32,7 +32,6 @@ class FakeTextureView @JvmOverloads constructor(
 
     private var mDrawable: Drawable? = null
     private var mMatrix = Matrix()
-    private var mScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_START
 
     private var attacher: PhotoViewAttacher = PhotoViewAttacher(this)
 
@@ -41,6 +40,10 @@ class FakeTextureView @JvmOverloads constructor(
     private var mSurfaceDestroyed = true
 
     init {
+        val drawThread = HandlerThread("FakeTextureView")
+        drawThread.start()
+        mDrawHandler = Handler(drawThread.looper)
+
         surfaceTextureListener = object : SurfaceTextureListener {
             override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
                 Log.d(TAG, "onSurfaceTextureSizeChanged: $width, $height")
@@ -59,15 +62,10 @@ class FakeTextureView @JvmOverloads constructor(
             override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
                 Log.d(TAG, "onSurfaceTextureAvailable: $width, $height")
                 mSurfaceDestroyed = false
-//                invalidate()
+                invalidateFake(mDrawable, mMatrix, mSurfaceDestroyed, mDrawHandler)
             }
         }
-
-        val drawThread = HandlerThread("FakeTextureView")
-        drawThread.start()
-        mDrawHandler = Handler(drawThread.looper)
     }
-
 
     override fun getParentFake(): ViewParent {
         return parent
@@ -130,44 +128,42 @@ class FakeTextureView @JvmOverloads constructor(
     }
 
     override fun setFakeDrawable(drawable: Drawable?) {
-//        Log.d(TAG, "setFakeDrawable $drawable")
+        Log.d(TAG, "setFakeDrawable $drawable")
         mDrawable = drawable
         updateDrawable()
         requestLayout()
-//        invalidate()
-        realDraw(mDrawable, mMatrix, mSurfaceDestroyed, mDrawHandler)
+        attacher.update()
     }
 
     override fun getFakeDrawable(): Drawable? {
-//        Log.d(TAG, "getFakeDrawable $mDrawable")
+        Log.d(TAG, "getFakeDrawable $mDrawable")
         return mDrawable
     }
 
     override fun getFakeScaleType(): ImageView.ScaleType {
 //        Log.d(TAG, "getFakeScaleType $mScaleType")
-        return mScaleType
+        Log.d(TAG, "getFakeScaleType")
+        return attacher.scaleType
     }
 
     override fun setFakeMatrix(matrix: Matrix?) {
-        if (!Util.matrixChanged(mMatrix, matrix)) return
-        Log.d(TAG, "setFakeMatrix $matrix")
+        // TODO overscroll not refresh ui
+//        if (!Util.matrixChanged(mMatrix, matrix)) return
+
         mMatrix.set(matrix)
+        Log.d(TAG, "setFakeMatrix $mMatrix")
         configureBounds()
-//        invalidate()
-        realDraw(mDrawable, mMatrix, mSurfaceDestroyed, mDrawHandler)
+        invalidateFake(mDrawable, mMatrix, mSurfaceDestroyed, mDrawHandler)
     }
 
     override fun getFakeMatrix(): Matrix? {
 //        Log.d(TAG, "getFakeMatrix $mMatrix")
-        return mMatrix
+        return attacher.imageMatrix
     }
 
     override fun setFakeScaleType(scaleType: ImageView.ScaleType) {
-//        Log.d(TAG, "setFakeScaleType $scaleType")
-        mScaleType = scaleType
-//        requestLayout()
-//        invalidate()
-        realDraw(mDrawable, mMatrix, mSurfaceDestroyed, mDrawHandler)
+        Log.d(TAG, "setFakeScaleType $scaleType")
+        attacher.scaleType = scaleType
     }
 
     private fun updateDrawable() {
@@ -308,10 +304,10 @@ class FakeTextureView @JvmOverloads constructor(
         super.invalidate()
         Log.d(TAG, "invalidate")
         // FIXME cannot draw here: 异步线程绘制时间太长(超过16ms)会一直收回调
-//        realDraw(mDrawable, mMatrix, mSurfaceDestroyed, mDrawHandler)
+//        invalidateFake(mDrawable, mMatrix, mSurfaceDestroyed, mDrawHandler)
     }
 
-    private fun realDraw(drawable: Drawable?, matrix: Matrix, surfaceDestroyed: Boolean, handler: Handler) {
+    private fun invalidateFake(drawable: Drawable?, matrix: Matrix, surfaceDestroyed: Boolean, handler: Handler) {
         if (drawable == null || surfaceDestroyed) {
             return
         }
@@ -323,8 +319,9 @@ class FakeTextureView @JvmOverloads constructor(
         handler.post {
             if (drawable == null || surfaceDestroyed) return@post
             val canvas = lockCanvas() ?: return@post
+            Log.d(TAG, "canvas: ${canvas.width}, ${canvas.height}")
             val saveCount = canvas.saveCount
-            Log.d(TAG, "$clonedMatrix")
+            Log.d(TAG, "matrix: $clonedMatrix")
             canvas.concat(clonedMatrix)
             drawable!!.draw(canvas)
             canvas.restoreToCount(saveCount)

@@ -30,7 +30,6 @@ class FakeImageView @JvmOverloads constructor(
 
     private var mDrawable: Drawable? = null
     private var mMatrix = Matrix()
-//    private var mScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_START
 
     private var attacher: PhotoViewAttacher = PhotoViewAttacher(this)
 
@@ -99,7 +98,6 @@ class FakeImageView @JvmOverloads constructor(
         mDrawable = drawable
         updateDrawable()
         requestLayout()
-        invalidate()
         attacher.update()
     }
 
@@ -115,11 +113,11 @@ class FakeImageView @JvmOverloads constructor(
     }
 
     override fun setFakeMatrix(matrix: Matrix?) {
-        // overscroll not refresh ui
-        if (!Util.matrixChanged(mMatrix, matrix)) return
+        // TODO overscroll not refresh ui
+//        if (!Util.matrixChanged(mMatrix, matrix)) return
 
-        Log.d(TAG, "setFakeMatrix $matrix")
         mMatrix.set(matrix)
+        Log.d(TAG, "setFakeMatrix $mMatrix")
         configureBounds()
         invalidate()
     }
@@ -131,9 +129,6 @@ class FakeImageView @JvmOverloads constructor(
 
     override fun setFakeScaleType(scaleType: ImageView.ScaleType) {
         Log.d(TAG, "setFakeScaleType $scaleType")
-//        mScaleType = scaleType
-//        requestLayout()
-//        invalidate()
         attacher.scaleType = scaleType
     }
 
@@ -272,6 +267,7 @@ class FakeImageView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas?) {
+        Log.d(TAG, "canvas: ${canvas!!.width}, ${canvas.height}")
         if (mDrawable == null) {
             return  // couldn't resolve the URI
         }
